@@ -1,0 +1,144 @@
+📝 Prompt for Agentic AI
+
+Project: BizFundraiser – An investment crowdfunding platform
+Tech Stack:
+
+Frontend: React + Vite + TailwindCSS (for styling)
+
+Backend: NestJS + TypeScript
+
+Database: PostgreSQL with Prisma ORM
+
+Auth: JWT-based authentication
+
+Payments: Integration-ready for Kora
+
+Deployment: Dockerized for scalability
+
+🎯 Core Features for MVP
+🔹 Investor Features
+
+Authentication & KYC
+
+Sign up/login (JWT auth).
+
+Profile with KYC fields: name, email, phone, ID upload.
+
+Wallet & Transactions
+
+Deposit money (simulate with dummy payment integration initially).
+
+Withdraw funds to bank (mock service for now).
+
+View wallet balance + transaction history.
+
+Investments
+
+Browse available projects (list with title, business name, goal, duration, projected returns).
+
+Invest in a project (deduct from wallet).
+
+Dashboard: active investments, payout dates, profits earned.
+
+🔹 Business (Project Owner) Features
+
+Authentication & KYC
+
+Sign up/login (JWT auth).
+
+Business profile with CAC registration number, tax ID, documents upload.
+
+Project Management
+
+Apply for funding (title, description, amount requested, duration, expected ROI).
+
+Upload supporting documents.
+
+See project funding status.
+
+Repay project at end of cycle (manual for now, API-ready for auto-debit).
+
+🔹 Admin Features
+
+Admin Dashboard
+
+Approve/reject businesses and projects before listing.
+
+Monitor active investments.
+
+Control commission rates and platform fees.
+
+Trigger payouts after project maturity.
+
+🔹 Platform Logic
+
+Escrow Simulation: When investors fund, money is held in “escrow” (separate table/wallet). Funds are released to business only when project is approved.
+
+Payout Flow: At project maturity → Business repays → Investors get principal + profit → Platform takes commission.
+
+Commissions:
+
+% of funds raised (upfront).
+
+% of profit returned (platform fee).
+
+📦 System Architecture
+Frontend (React + Vite)
+
+Pages:
+
+Landing page (about BizFundraiser, how it works).
+
+Login / Register.
+
+Investor dashboard (wallet, investments, returns).
+
+Business dashboard (submit project, repayments).
+
+Admin dashboard (approve projects, monitor funds).
+
+UI library: TailwindCSS.
+
+State management: React Query (for API calls).
+
+Backend (NestJS)
+
+Modules:
+
+AuthModule (JWT, KYC).
+
+UserModule (Investor, Business, Admin roles).
+
+WalletModule (balance, transactions).
+
+ProjectModule (create, approve, invest, repay).
+
+AdminModule (approvals, fee control).
+
+Database Models (Prisma):
+
+User (role: investor | business | admin).
+
+Wallet (user balance).
+
+Transaction (deposits, withdrawals, investments, repayments).
+
+Project (status: pending, approved, funded, repaid).
+
+Investment (investor → project → amount).
+
+Commission (platform fees).
+
+🚀 Development Notes
+
+Start with mock payment service, later integrate Paystack/Flutterwave.
+
+Add seeds for dummy projects + users for demo.
+
+Implement unit tests for critical modules (Auth, Wallet, Projects).
+
+Containerize with Docker Compose (backend, frontend, db).
+
+🔑 Final Instruction for AI:
+
+Build BizFundraiser, an investment crowdfunding platform, with React+Vite frontend and NestJS backend. Implement investor, business, and admin flows as described, with wallet, project funding, repayments, and commission logic. Use PostgreSQL with Prisma for persistence. Use JWT auth. Mock payment for deposits/withdrawals. Provide Docker setup for full stack.
