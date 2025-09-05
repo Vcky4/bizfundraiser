@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  INVESTOR
+  BUSINESS
+  ADMIN
+}
+
+enum ProjectStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FUNDED
+  REPAID
+  CANCELLED
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INVESTMENT
+  REPAYMENT
+  COMMISSION
+  REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String?
+  role      UserRole @default(INVESTOR)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // KYC fields
+  kycCompleted Boolean @default(false)
+  idNumber     String?
+  idDocument   String? // URL to uploaded document
+  address      String?
+  dateOfBirth  DateTime?
+
+  // Business specific fields
+  businessName    String?
+  cacNumber      String?
+  taxId          String?
+  businessAddress String?
+  businessDocuments String[] // Array of document URLs
+
+  // Relations
+  wallet      Wallet?
+  projects    Project[]
+  investments Investment[]
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  balance   Decimal  @default(0) @db.Decimal(15, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("wallets")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  businessId  String
+  amountRequested Decimal    @db.Decimal(15, 2)
+  amountRaised   Decimal    @default(0) @db.Decimal(15, 2)
+  duration    Int           // in months
+  expectedROI Decimal       @db.Decimal(5, 2) // percentage
+  status      ProjectStatus @default(PENDING)
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  approvedAt  DateTime?
+  fundedAt    DateTime?
+  repaidAt    DateTime?
+
+  // Supporting documents
+  documents String[] // Array of document URLs
+
+  // Relations
+  business    User          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  investments Investment[]
+
+  @@map("projects")
+}
+
+model Investment {
+  id        String   @id @default(cuid())
+  investorId String
+  projectId  String
+  amount    Decimal  @db.Decimal(15, 2)
+  expectedReturn Decimal @db.Decimal(15, 2)
+  actualReturn Decimal? @db.Decimal(15, 2)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  repaidAt  DateTime?
+
+  // Relations
+  investor User    @relation(fields: [investorId], references: [id], onDelete: Cascade)
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([investorId, projectId])
+  @@map("investments")
+}
+
+model Transaction {
+  id          String            @id @default(cuid())
+  userId      String
+  type        TransactionType
+  status      TransactionStatus @default(PENDING)
+  amount      Decimal           @db.Decimal(15, 2)
+  description String?
+  reference   String?           @unique
+  metadata    Json?             // Additional transaction data
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  completedAt DateTime?
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model Commission {
+  id                String   @id @default(cuid())
+  projectId         String
+  amount            Decimal  @db.Decimal(15, 2)
+  percentage        Decimal  @db.Decimal(5, 2) // percentage
+  type              String   // "funding" or "profit"
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("commissions")
+}
