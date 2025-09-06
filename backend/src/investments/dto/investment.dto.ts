@@ -1,4 +1,4 @@
-import { IsDecimal, IsString, Min } from 'class-validator';
+import { IsDecimal, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateInvestmentDto {
   @IsString()

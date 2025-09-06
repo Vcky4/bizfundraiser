@@ -269,6 +269,11 @@ export class InvestmentsService {
       },
       include: {
         investor: true,
+        project: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
 
@@ -292,7 +297,7 @@ export class InvestmentsService {
             actualReturn,
             repaidAt: new Date(),
             isActive: false,
-          },
+          }
         });
 
         // Process wallet repayment
@@ -300,7 +305,7 @@ export class InvestmentsService {
           investment.investorId,
           investorShare,
           projectId,
-          `Repayment from ${investment.project.title}`,
+          `Repayment from ${investment.project?.title}`,
         );
       });
     }

@@ -79,7 +79,7 @@ model User {
 model Wallet {
   id        String   @id @default(cuid())
   userId    String   @unique
-  balance   Decimal  @default(0) @db.Decimal(15, 2)
+  balance   Float    @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -93,10 +93,10 @@ model Project {
   title       String
   description String
   businessId  String
-  amountRequested Decimal    @db.Decimal(15, 2)
-  amountRaised   Decimal    @default(0) @db.Decimal(15, 2)
+  amountRequested Float
+  amountRaised   Float    @default(0)
   duration    Int           // in months
-  expectedROI Decimal       @db.Decimal(5, 2) // percentage
+  expectedROI Float       // percentage
   status      ProjectStatus @default(PENDING)
   isActive    Boolean       @default(true)
   createdAt   DateTime      @default(now())
@@ -119,9 +119,9 @@ model Investment {
   id        String   @id @default(cuid())
   investorId String
   projectId  String
-  amount    Decimal  @db.Decimal(15, 2)
-  expectedReturn Decimal @db.Decimal(15, 2)
-  actualReturn Decimal? @db.Decimal(15, 2)
+  amount    Float
+  expectedReturn Float
+  actualReturn Float?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -140,7 +140,7 @@ model Transaction {
   userId      String
   type        TransactionType
   status      TransactionStatus @default(PENDING)
-  amount      Decimal           @db.Decimal(15, 2)
+  amount      Float
   description String?
   reference   String?           @unique
   metadata    Json?             // Additional transaction data
@@ -157,8 +157,8 @@ model Transaction {
 model Commission {
   id                String   @id @default(cuid())
   projectId         String
-  amount            Decimal  @db.Decimal(15, 2)
-  percentage        Decimal  @db.Decimal(5, 2) // percentage
+  amount            Float
+  percentage        Float // percentage
   type              String   // "funding" or "profit"
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
