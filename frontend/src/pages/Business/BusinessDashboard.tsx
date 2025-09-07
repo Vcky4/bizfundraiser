@@ -7,17 +7,18 @@ import { Progress } from '@/components/ui/progress';
 import { projectsAPI } from '@/lib/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { ProjectResponse } from '@/types';
 
 export const BusinessDashboard = () => {
   const { user } = useAuth();
   
-  const { data: projects = [] } = useQuery({
+  const { data: projects = {} as ProjectResponse } = useQuery({
     queryKey: ['projects'],
     queryFn: projectsAPI.getProjects,
   });
 
   // Filter projects for current business
-  const myProjects = projects.filter(p => p.businessId === user?.id);
+  const myProjects = projects?.projects?.filter(p => p.businessId === user?.id) || [];
   const pendingProjects = myProjects.filter(p => p.status === 'PENDING');
   const approvedProjects = myProjects.filter(p => p.status === 'APPROVED');
   const fundedProjects = myProjects.filter(p => p.status === 'FUNDED');

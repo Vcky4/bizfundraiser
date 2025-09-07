@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { projectsAPI, investmentsAPI, walletAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
+import { ProjectResponse } from '@/types';
 
 export const Projects = () => {
   const [search, setSearch] = useState('');
@@ -23,7 +24,7 @@ export const Projects = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: projects = [] } = useQuery({
+  const { data: projects = {} as ProjectResponse } = useQuery({
     queryKey: ['projects'],
     queryFn: projectsAPI.getProjects,
   });
@@ -56,7 +57,7 @@ export const Projects = () => {
     },
   });
 
-  const approvedProjects = projects.filter(p => p.status === 'APPROVED');
+  const approvedProjects = projects?.projects?.filter(p => p.status === 'APPROVED') || [];
   
   let filteredProjects = approvedProjects.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase()) ||

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { walletAPI, projectsAPI, investmentsAPI } from '@/lib/api';
 import { Link } from 'react-router-dom';
+import { ProjectResponse, InvestmentResponse } from '@/types';
 
 export const InvestorDashboard = () => {
   const { data: wallet } = useQuery({
@@ -13,23 +14,24 @@ export const InvestorDashboard = () => {
     queryFn: walletAPI.getWallet,
   });
 
-  const { data: projects = [] } = useQuery({
+  const { data: projects = {} as ProjectResponse } = useQuery({
     queryKey: ['projects'],
     queryFn: projectsAPI.getProjects,
   });
 
-  const { data: investments = [] } = useQuery({
+  const { data: investments = {} as InvestmentResponse } = useQuery({
     queryKey: ['investments'],
     queryFn: investmentsAPI.getInvestments,
   });
-
-  const approvedProjects = projects.filter(p => p.status === 'APPROVED');
-  const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
-  const expectedReturns = investments.reduce((sum, inv) => sum + inv.expectedReturn, 0);
-  const activeInvestments = investments.filter(inv => inv.status === 'ACTIVE');
-  const completedInvestments = investments.filter(inv => inv.status === 'COMPLETED');
-  const totalProfit = expectedReturns - totalInvested;
-  const roiPercentage = totalInvested > 0 ? Math.round((totalProfit / totalInvested) * 100) : 0;
+console.log(investments, 'investments')
+console.log(projects, 'projects')
+  const approvedProjects = projects?.projects?.filter(p => p.status === 'APPROVED') || [];
+  const totalInvested = investments?.investments?.reduce((sum, inv) => sum + inv.amount, 0) || 0;
+  const expectedReturns = investments?.investments?.reduce((sum, inv) => sum + inv.expectedReturn, 0) || 0;
+  const activeInvestments = investments?.investments?.filter(inv => inv.status === 'ACTIVE') || [];
+  const completedInvestments = investments?.investments?.filter(inv => inv.status === 'COMPLETED') || [];
+  const totalProfit = expectedReturns - totalInvested || 0;
+  const roiPercentage = totalInvested > 0 ? Math.round((totalProfit / totalInvested) * 100) : 0 || 0;
 
   const getInvestmentStatusBadge = (status: string) => {
     switch (status) {
@@ -63,7 +65,7 @@ export const InvestorDashboard = () => {
       icon: TrendingUp,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
-      description: `Across ${investments.length} investments`,
+      description: `Across ${investments?.investments?.length} investments`,
     },
     {
       title: 'Expected Returns',
@@ -171,10 +173,10 @@ export const InvestorDashboard = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-600">Investment Completion</span>
                   <span className="text-sm font-bold text-gray-900">
-                    {investments.length > 0 ? Math.round((completedInvestments.length / investments.length) * 100) : 0}%
+                    {investments?.investments?.length > 0 ? Math.round((completedInvestments.length / investments?.investments?.length) * 100) : 0}%
                   </span>
                 </div>
-                <Progress value={investments.length > 0 ? (completedInvestments.length / investments.length) * 100 : 0} className="h-3" />
+                <Progress value={investments?.investments?.length > 0 ? (completedInvestments.length / investments?.investments?.length) * 100 : 0} className="h-3" />
               </div>
 
               <div className="pt-4 border-t border-gray-200">
@@ -216,7 +218,7 @@ export const InvestorDashboard = () => {
                         <h3 className="font-semibold text-gray-900 mb-1">{project.title}</h3>
                         <p className="text-sm text-gray-600 mb-2">{project.businessName}</p>
                         <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span>Goal: ₦{project.fundingGoal.toLocaleString()}</span>
+                          <span>Goal: ₦{project.fundingGoal?.toLocaleString()}</span>
                           <span>Duration: {project.duration} months</span>
                         </div>
                       </div>
@@ -243,7 +245,7 @@ export const InvestorDashboard = () => {
                         />
                       </div>
                       <p className="text-xs text-gray-500">
-                        ₦{project.currentFunding.toLocaleString()} funded of ₦{project.fundingGoal.toLocaleString()}
+                        ₦{project.currentFunding?.toLocaleString()} funded of ₦{project.fundingGoal?.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -286,7 +288,7 @@ export const InvestorDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {investments.slice(0, 5).map((investment, index) => (
+              {investments?.investments?.slice(0, 5).map((investment, index) => (
                 <div key={investment.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow duration-200 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">
@@ -309,7 +311,7 @@ export const InvestorDashboard = () => {
                 </div>
               ))}
               
-              {investments.length === 0 && (
+              {investments?.investments?.length === 0 && (
                 <div className="text-center py-12">
                   <TrendingUp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">No investments yet</h3>

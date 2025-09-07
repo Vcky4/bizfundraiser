@@ -80,9 +80,6 @@ export const Landing = () => {
         <div className="relative max-w-7xl mx-auto px-4 py-20 lg:py-32">
           <div className="text-center max-w-6xl mx-auto">
             <div className="animate-fade-in-up">
-              <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 border-blue-200">
-                🚀 Trusted by 10,000+ investors worldwide
-              </Badge>
               
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
                 Invest in the{' '}
@@ -240,31 +237,6 @@ export const Landing = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl text-center text-white p-12 lg:p-20">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative z-10">
-              <div className="animate-fade-in-up">
-                <h2 className="text-3xl lg:text-5xl font-bold mb-6">Ready to Get Started?</h2>
-                <p className="text-xl lg:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
-                  Join thousands of investors and businesses already using our platform to build the future.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-4 h-auto bg-white text-blue-600 hover:bg-gray-100 shadow-xl">
-                    <Link to="/register">Create Account Today</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild className="text-lg px-8 py-4 h-auto border-2 border-white text-white hover:bg-white/10">
-                    <Link to="/login">Sign In</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

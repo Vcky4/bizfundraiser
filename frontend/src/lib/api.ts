@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AuthResponse, User, Wallet, Transaction, Project, Investment } from '@/types';
+import type { AuthResponse, User, Wallet, Transaction, Project, Investment, ProjectResponse, InvestmentResponse } from '@/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -25,27 +25,27 @@ export const authAPI = {
     api.post('/auth/register', { email, password, name, role }).then(res => res.data),
   
   me: (): Promise<User> =>
-    api.get('/auth/me').then(res => res.data),
+    api.get('/auth/profile').then(res => res.data),
 };
 
 // Wallet API
 export const walletAPI = {
   getWallet: (): Promise<Wallet> =>
-    api.get('/wallet').then(res => res.data),
+    api.get('/wallets').then(res => res.data),
   
   getTransactions: (): Promise<Transaction[]> =>
-    api.get('/wallet/transactions').then(res => res.data),
+    api.get('/wallets/transactions').then(res => res.data),
   
   deposit: (amount: number): Promise<Transaction> =>
-    api.post('/wallet/deposit', { amount }).then(res => res.data),
+    api.post('/wallets/deposit', { amount }).then(res => res.data),
   
   withdraw: (amount: number): Promise<Transaction> =>
-    api.post('/wallet/withdraw', { amount }).then(res => res.data),
+    api.post('/wallets/withdraw', { amount }).then(res => res.data),
 };
 
 // Projects API
 export const projectsAPI = {
-  getProjects: (): Promise<Project[]> =>
+  getProjects: (): Promise<ProjectResponse> =>
     api.get('/projects').then(res => res.data),
   
   getProject: (id: string): Promise<Project> =>
@@ -66,7 +66,7 @@ export const projectsAPI = {
 
 // Investments API
 export const investmentsAPI = {
-  getInvestments: (): Promise<Investment[]> =>
+  getInvestments: (): Promise<InvestmentResponse> =>
     api.get('/investments').then(res => res.data),
   
   invest: (projectId: string, amount: number): Promise<Investment> =>

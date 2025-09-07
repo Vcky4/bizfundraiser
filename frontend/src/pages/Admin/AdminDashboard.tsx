@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { projectsAPI, investmentsAPI, usersAPI } from '@/lib/api';
 import { Link } from 'react-router-dom';
+import { ProjectResponse } from '@/types';
 
 export const AdminDashboard = () => {
-  const { data: projects = [] } = useQuery({
+  const { data: projects = {} as ProjectResponse } = useQuery({
     queryKey: ['projects'],
     queryFn: projectsAPI.getProjects,
   });
@@ -23,13 +24,13 @@ export const AdminDashboard = () => {
     queryFn: usersAPI.getUsers,
   });
 
-  const pendingProjects = projects.filter(p => p.status === 'PENDING');
-  const approvedProjects = projects.filter(p => p.status === 'APPROVED');
-  const fundedProjects = projects.filter(p => p.status === 'FUNDED');
-  const rejectedProjects = projects.filter(p => p.status === 'REJECTED');
-  const totalInvestments = investments.reduce((sum, inv) => sum + inv.amount, 0);
+  const pendingProjects = projects?.projects?.filter(p => p.status === 'PENDING') || [];
+  const approvedProjects = projects?.projects?.filter(p => p.status === 'APPROVED') || [];
+  const fundedProjects = projects?.projects?.filter(p => p.status === 'FUNDED') || [];
+  const rejectedProjects = projects?.projects?.filter(p => p.status === 'REJECTED') || [];
+  const totalInvestments = investments?.reduce((sum, inv) => sum + inv.amount, 0) || 0;
   const unverifiedUsers = users.filter(u => !u.isVerified);
-  const activeInvestments = investments.filter(inv => inv.status === 'ACTIVE');
+  const activeInvestments = investments?.filter(inv => inv.status === 'ACTIVE') || [];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -74,7 +75,7 @@ export const AdminDashboard = () => {
     },
     {
       title: 'Total Projects',
-      value: projects.length,
+      value: projects?.projects?.length || 0,
       change: '+8%',
       changeType: 'positive',
       icon: FileText,

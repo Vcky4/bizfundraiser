@@ -55,6 +55,26 @@ export interface Project {
   createdAt: string;
 }
 
+export interface ProjectResponse {
+  projects: Project[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+}
+
+export interface InvestmentResponse {
+  investments: Investment[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+}
+
 export interface Investment {
   id: string;
   investorId: string;
